@@ -3,7 +3,11 @@
 Runs [anytype-cli](https://github.com/anyproto/anytype-cli) and exposes its MCP tools as an OpenAPI server for Open WebUI.
 
 ```sh
-docker run --rm -it -v anytype-data:/data --entrypoint anytype ghcr.io/OWNER/anytype-cli-docker:main auth create bot
+docker run --rm -it -v anytype-data:/data --entrypoint sh ghcr.io/OWNER/anytype-cli-docker:main -c '
+  anytype serve --listen-address 127.0.0.1:31012 &
+  until curl -fsS http://127.0.0.1:31012/docs/openapi.json >/dev/null; do sleep 1; done
+  anytype auth create bot
+'
 ```
 
 Start server after creating Anytype API key:
@@ -52,6 +56,10 @@ Create bot account before starting container. In Unraid terminal:
 ```sh
 docker run --rm -it \
   -v /mnt/user/appdata/anytype-mcp:/data \
-  --entrypoint anytype \
-  ghcr.io/basketkase/anytype-cli-docker:main auth create bot
+  --entrypoint sh \
+  ghcr.io/basketkase/anytype-cli-docker:main -c '
+    anytype serve --listen-address 127.0.0.1:31012 &
+    until curl -fsS http://127.0.0.1:31012/docs/openapi.json >/dev/null; do sleep 1; done
+    anytype auth create bot
+  '
 ```
