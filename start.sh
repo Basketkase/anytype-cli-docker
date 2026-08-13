@@ -7,7 +7,7 @@ set -eu
 anytype serve --listen-address 127.0.0.1:31012 &
 anytype_pid=$!
 
-until curl -fsS "$ANYTYPE_API_BASE_URL/docs/openapi.json" >/dev/null; do
+until nc -z 127.0.0.1 31010; do
     if ! kill -0 "$anytype_pid" 2>/dev/null; then
         wait "$anytype_pid"
         exit $?

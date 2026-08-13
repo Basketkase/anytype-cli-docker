@@ -5,7 +5,7 @@ Runs [anytype-cli](https://github.com/anyproto/anytype-cli) and exposes its MCP 
 ```sh
 docker run --rm -it -v anytype-data:/data --entrypoint sh ghcr.io/OWNER/anytype-cli-docker:main -c '
   anytype serve --listen-address 127.0.0.1:31012 &
-  until curl -fsS http://127.0.0.1:31012/docs/openapi.json >/dev/null; do sleep 1; done
+  sleep 5
   anytype auth create bot
 '
 ```
@@ -59,7 +59,7 @@ docker run --rm -it \
   --entrypoint sh \
   ghcr.io/basketkase/anytype-cli-docker:main -c '
     anytype serve --listen-address 127.0.0.1:31012 &
-    until curl -fsS http://127.0.0.1:31012/docs/openapi.json >/dev/null; do sleep 1; done
+    sleep 5
     anytype auth create bot
   '
 ```

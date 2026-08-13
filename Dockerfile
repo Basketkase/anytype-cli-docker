@@ -4,7 +4,7 @@ ARG ANYTYPE_VERSION=v0.3.6
 ARG ANYTYPE_MCP_VERSION=1.2.10
 ARG TARGETARCH
 
-RUN apk add --no-cache ca-certificates curl nodejs npm tar \
+RUN apk add --no-cache ca-certificates curl netcat-openbsd nodejs npm tar \
     && curl -fsSL "https://github.com/anyproto/anytype-cli/releases/download/${ANYTYPE_VERSION}/anytype-cli-${ANYTYPE_VERSION}-linux-${TARGETARCH}.tar.gz" \
         | tar -xz -C /usr/local/bin anytype \
     && pip install --no-cache-dir mcpo \
