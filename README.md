@@ -93,3 +93,17 @@ docker run --rm -it \
     anytype auth apikey create open-webui
   '
 ```
+
+### Join Space
+
+In Anytype desktop, create an invite link for target space and grant bot **Editor** access. With container running, join space:
+
+```sh
+docker exec -it anytype-mcp anytype space join 'PASTE_ANYTYPE_INVITE_LINK'
+```
+
+Replace `anytype-mcp` with Unraid container name. Verify access:
+
+```sh
+docker exec -it anytype-mcp anytype space list
+```
