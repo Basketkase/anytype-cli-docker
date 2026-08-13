@@ -71,13 +71,35 @@ Replace `anytype-mcp` with Unraid container name. Verify access:
 docker exec -it anytype-mcp anytype space list
 ```
 
-## 3. Connect Open WebUI
+## 3. Expose Through Traefik
+
+Open WebUI loaded over HTTPS cannot fetch an HTTP OpenAPI server, and its browser requests require CORS. Put this container and Traefik on the same Docker network, then add these labels to the Anytype container. Replace the hostnames, Docker network, and certificate resolver.
+
+```yaml
+labels:
+  - traefik.enable=true
+  - traefik.docker.network=proxy
+  - traefik.http.routers.anytype-mcp.rule=Host(`anytype-mcp.example.com`)
+  - traefik.http.routers.anytype-mcp.entrypoints=websecure
+  - traefik.http.routers.anytype-mcp.tls.certresolver=letsencrypt
+  - traefik.http.services.anytype-mcp.loadbalancer.server.port=8000
+  - traefik.http.routers.anytype-mcp.middlewares=anytype-mcp-cors
+  - traefik.http.middlewares.anytype-mcp-cors.headers.accesscontrolalloworiginlist=https://open-webui.example.com
+  - traefik.http.middlewares.anytype-mcp-cors.headers.accesscontrolallowmethods=GET,POST,PUT,PATCH,DELETE,OPTIONS
+  - traefik.http.middlewares.anytype-mcp-cors.headers.accesscontrolallowheaders=Authorization,Content-Type,X-Session-Id
+```
+
+Use the exact browser origin for `accesscontrolalloworiginlist`, including a non-default port when applicable. If the browser reports another missing CORS header, add its `Access-Control-Request-Headers` value to `accesscontrolallowheaders`.
+
+## 4. Connect Open WebUI
 
 In Open WebUI, add an **OpenAPI** server:
 
 | Field | Value |
 | --- | --- |
-| Server URL | `http://UNRAID-IP:8000/openapi.json` |
-| Header | `Authorization: Bearer MCPO_API_KEY` |
+| URL | `https://anytype-mcp.example.com` |
+| Auth | `Bearer` |
+| Token | raw `MCPO_API_KEY` value, without `Bearer ` |
+| OpenAPI Spec | URL: `openapi.json` |
 
-Use actual proxy key from `MCPO_API_KEY`. Select **OpenAPI**, not **MCP (Streamable HTTP)**: `mcpo` converts Anytype's stdio MCP server to OpenAPI HTTP.
+Open WebUI resolves this to `https://anytype-mcp.example.com/openapi.json`. Select **OpenAPI**, not **MCP (Streamable HTTP)**: `mcpo` converts Anytype's stdio MCP server to OpenAPI HTTP.
