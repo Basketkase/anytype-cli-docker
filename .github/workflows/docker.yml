@@ -37,18 +37,3 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
-      - uses: docker/metadata-action@v5
-        id: mcp-metadata
-        with:
-          images: ghcr.io/${{ github.repository }}-mcp
-          tags: |
-            type=ref,event=branch
-            type=ref,event=tag
-            type=sha
-      - uses: docker/build-push-action@v6
-        with:
-          context: mcp
-          platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.mcp-metadata.outputs.tags }}
-          labels: ${{ steps.mcp-metadata.outputs.labels }}
