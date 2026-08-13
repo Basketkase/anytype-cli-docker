@@ -30,3 +30,28 @@ docker compose up -d
 In Open WebUI, add an **OpenAPI** server at `http://HOST:8000/openapi.json` with header `Authorization: Bearer MCPO_API_KEY`. Do not use Open WebUI's **MCP (Streamable HTTP)** connection type: `mcpo` exposes OpenAPI, not Streamable HTTP.
 
 Keep port `8000` on trusted network only. It grants access to Anytype through provided API key.
+
+## Unraid
+
+In **Docker** > **Add Container**, set:
+
+| Field | Value |
+| --- | --- |
+| Name | `anytype-mcp` |
+| Repository | `ghcr.io/basketkase/anytype-cli-docker:main` |
+| Network Type | `bridge` |
+| Port | Host `8000` to container `8000` (TCP) |
+| Path | Host `/mnt/user/appdata/anytype-mcp` to container `/data` |
+| Variable | `OPENAPI_MCP_HEADERS` = `{"Authorization":"Bearer YOUR_ANYTYPE_API_KEY","Anytype-Version":"2025-11-08"}` |
+| Variable | `MCPO_API_KEY` = long random secret |
+
+Click **Apply**. In Open WebUI, add an **OpenAPI** server at `http://UNRAID-IP:8000/openapi.json` with `Authorization: Bearer MCPO_API_KEY` header.
+
+Create bot account before starting container. In Unraid terminal:
+
+```sh
+docker run --rm -it \
+  -v /mnt/user/appdata/anytype-mcp:/data \
+  --entrypoint anytype \
+  ghcr.io/basketkase/anytype-cli-docker:main auth create bot
+```
