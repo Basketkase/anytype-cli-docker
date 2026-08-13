@@ -37,6 +37,13 @@ Keep port `8000` on trusted network only. It grants access to Anytype through pr
 
 ## Unraid
 
+Create persistent directory with ownership matching container's `anytype` user (UID/GID `1000`):
+
+```sh
+mkdir -p /mnt/user/appdata/anytype-mcp
+chown -R 1000:1000 /mnt/user/appdata/anytype-mcp
+```
+
 In **Docker** > **Add Container**, set:
 
 | Field | Value |

@@ -9,7 +9,7 @@ RUN apk add --no-cache ca-certificates curl netcat-openbsd nodejs npm tar \
         | tar -xz -C /usr/local/bin anytype \
     && pip install --no-cache-dir mcpo \
     && npm install --global "@anyproto/anytype-mcp@${ANYTYPE_MCP_VERSION}" \
-    && adduser -D -h /data anytype
+    && adduser -D -u 1000 -h /data anytype
 
 USER anytype
 WORKDIR /data
