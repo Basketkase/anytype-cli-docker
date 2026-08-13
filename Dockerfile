@@ -9,10 +9,12 @@ RUN apk add --no-cache ca-certificates curl netcat-openbsd nodejs npm tar \
         | tar -xz -C /usr/local/bin anytype \
     && pip install --no-cache-dir mcpo \
     && npm install --global "@anyproto/anytype-mcp@${ANYTYPE_MCP_VERSION}" \
-    && adduser -D -u 1000 -h /data anytype
+    && mkdir -p /data \
+    && chown 99:100 /data
 
-USER anytype
+USER 99:100
 WORKDIR /data
+ENV HOME=/data
 ENV ANYTYPE_API_BASE_URL=http://127.0.0.1:31012
 
 EXPOSE 8000
