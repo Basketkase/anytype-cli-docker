@@ -15,6 +15,14 @@ until nc -z 127.0.0.1 31010; do
     sleep 1
 done
 
+until curl -fsS "$ANYTYPE_API_BASE_URL/docs/openapi.json" >/dev/null; do
+    if ! kill -0 "$anytype_pid" 2>/dev/null; then
+        wait "$anytype_pid"
+        exit $?
+    fi
+    sleep 1
+done
+
 mcpo --host 0.0.0.0 --port 8000 --api-key "$MCPO_API_KEY" -- anytype-mcp &
 mcpo_pid=$!
 
