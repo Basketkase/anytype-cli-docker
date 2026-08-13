@@ -1,0 +1,30 @@
+services:
+  anytype:
+    image: ghcr.io/basketkase/anytype-cli-docker:main
+    volumes:
+      - anytype-data:/data
+    ports:
+      - "31012:31012"
+
+  anytype-mcp:
+    image: ghcr.io/basketkase/anytype-cli-docker-mcp:main
+    depends_on:
+      - anytype
+    environment:
+      ANYTYPE_API_BASE_URL: http://anytype:31012
+      OPENAPI_MCP_HEADERS: ${OPENAPI_MCP_HEADERS:?Set the Anytype API key header}
+    command:
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --api-key
+      - ${MCPO_API_KEY:?Set the MCP proxy API key}
+      - --
+      - anytype-mcp
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+volumes:
+  anytype-data:
