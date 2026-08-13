@@ -19,6 +19,16 @@ docker run --rm -p 8000:8000 -v anytype-data:/data \
   ghcr.io/basketkase/anytype-cli-docker:main
 ```
 
+Create API key after bot account exists:
+
+```sh
+docker run --rm -it -v anytype-data:/data --entrypoint sh ghcr.io/OWNER/anytype-cli-docker:main -c '
+  anytype serve --listen-address 127.0.0.1:31012 &
+  sleep 5
+  anytype auth apikey create open-webui
+'
+```
+
 ## Open WebUI
 
 Anytype listens only inside container. `mcpo` converts its stdio MCP server into an OpenAPI HTTP server on port `8000`.
@@ -68,5 +78,18 @@ docker run --rm -it \
     anytype serve --listen-address 127.0.0.1:31012 &
     sleep 5
     anytype auth create bot
+  '
+```
+
+Create API key with same volume, then copy printed key into `OPENAPI_MCP_HEADERS`:
+
+```sh
+docker run --rm -it \
+  -v /mnt/user/appdata/anytype-mcp:/data \
+  --entrypoint sh \
+  ghcr.io/basketkase/anytype-cli-docker:main -c '
+    anytype serve --listen-address 127.0.0.1:31012 &
+    sleep 5
+    anytype auth apikey create open-webui
   '
 ```
