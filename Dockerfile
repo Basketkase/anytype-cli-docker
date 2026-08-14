@@ -12,8 +12,8 @@ RUN apk add --no-cache ca-certificates curl tar \
 USER 99:100
 WORKDIR /data
 ENV HOME=/data
-ENV ANYTYPE_API_BASE_URL=http://127.0.0.1:31012
 
+EXPOSE 31012
 VOLUME ["/data"]
 
-ENTRYPOINT ["anytype", "serve"]
+ENTRYPOINT ["anytype", "serve", "--listen-address", "0.0.0.0:31012"]
