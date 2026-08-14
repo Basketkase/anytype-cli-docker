@@ -12,6 +12,7 @@ RUN apk add --no-cache ca-certificates curl tar \
 USER 99:100
 WORKDIR /data
 ENV HOME=/data
+ENV ANYTYPE_API_BASE_URL=http://127.0.0.1:31012
 
 VOLUME ["/data"]
 
