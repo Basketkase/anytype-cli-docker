@@ -19,9 +19,8 @@ In Unraid **Docker** > **Add Container**, use:
 | Repository | `ghcr.io/basketkase/anytype-cli-docker:main` |
 | Network Type | `bridge` |
 | Path | Host `/mnt/user/appdata/anytype-cli` to container `/data` |
-| Command | `serve --listen-address 127.0.0.1:31012` |
 
-No environment variables or port mappings are required. Start the container, then create a bot account from the Unraid terminal. Store the printed bot account key securely.
+Leave **Command** blank: the image starts `anytype serve`. No environment variables or port mappings are required. Start the container, then create a bot account from the Unraid terminal. Store the printed bot account key securely.
 
 ```sh
 docker exec -it anytype-cli anytype auth create bot
@@ -53,5 +52,6 @@ For one-off commands, run the image directly with the same data directory:
 ```sh
 docker run --rm -it \
   -v /mnt/user/appdata/anytype-cli:/data \
+  --entrypoint anytype \
   ghcr.io/basketkase/anytype-cli-docker:main --help
 ```
