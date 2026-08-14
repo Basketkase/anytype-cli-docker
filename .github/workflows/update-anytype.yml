@@ -24,14 +24,9 @@ jobs:
           anytype_version=$(curl --fail-with-body --retry 3 --silent --show-error \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             https://api.github.com/repos/anyproto/anytype-cli/releases/latest | jq --raw-output .tag_name)
-          anytype_mcp_version=$(curl --fail-with-body --retry 3 --silent --show-error \
-            https://registry.npmjs.org/@anyproto%2fanytype-mcp/latest | jq --raw-output .version)
-
           [[ "$anytype_version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
-          [[ "$anytype_mcp_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
 
           sed -i "s/^ARG ANYTYPE_VERSION=.*/ARG ANYTYPE_VERSION=$anytype_version/" Dockerfile
-          sed -i "s/^ARG ANYTYPE_MCP_VERSION=.*/ARG ANYTYPE_MCP_VERSION=$anytype_mcp_version/" Dockerfile
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
@@ -40,5 +35,5 @@ jobs:
           commit-message: 'chore: update Anytype dependencies'
           title: 'chore: update Anytype dependencies'
           body: |
-            Updates Anytype CLI and Anytype MCP to their latest upstream releases.
+            Updates Anytype CLI to its latest upstream release.
           delete-branch: true
