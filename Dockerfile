@@ -1,6 +1,6 @@
 FROM alpine:3.22
 
-ARG ANYTYPE_VERSION=v0.3.6
+ARG ANYTYPE_VERSION=v0.5.0
 ARG TARGETARCH
 
 RUN apk add --no-cache ca-certificates curl tar \
